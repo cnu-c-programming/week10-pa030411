@@ -1,39 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef _WIN32
-#include <fcntl.h>
-#include <io.h>
-#endif
 
 struct Student {
     char name[100];
     int score;
     struct Student* next;
 };
-
-void print_utf16_start() {
-    #ifdef _WIN32
-    _setmode(_fileno(stdout), _O_BINARY);
-    #endif
-    fputc(0xff, stdout);
-    fputc(0xfe, stdout);
-}
-
-void print_utf16_text(const char* s) {
-    while (*s) {
-        if (*s == '\n') {
-            fputc('\r', stdout);
-            fputc(0, stdout);
-            fputc('\n', stdout);
-            fputc(0, stdout);
-        } else {
-            fputc(*s, stdout);
-            fputc(0, stdout);
-        }
-        s++;
-    }
-}
 
 void add_student(struct Student** head, char* name, int score) {
     struct Student* new_student = (struct Student*)malloc(sizeof(struct Student));
@@ -72,11 +45,8 @@ void delete_student(struct Student** head, char* name) {
 }
 
 void print_students(struct Student* head) {
-    char out[200];
-
     while (head != NULL) {
-        sprintf(out, "%s %d\n", head->name, head->score);
-        print_utf16_text(out);
+        printf("%s %d\n", head->name, head->score);
         head = head->next;
     }
 }
@@ -96,8 +66,6 @@ int main() {
     char command[100];
     char name[100];
     int score;
-
-    print_utf16_start();
 
     while (scanf("%s", command) != EOF) {
         if (strcmp(command, "add") == 0) {
