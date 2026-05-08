@@ -21,6 +21,7 @@ int main() {
     struct IPv4 s1 = {0};
     struct IPv4 s2 = {0};
 
+    sprintf((char*)s1.data, "original");
     update_val(s1);
     update_ptr(&s2);
     printf("%s\n", s1.data);
